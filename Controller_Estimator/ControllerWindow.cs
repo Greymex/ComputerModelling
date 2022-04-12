@@ -51,6 +51,14 @@ namespace Controller_Estimator
         {
             StartWindow.controllers.Add(new Controller(controller_name.Text, groups));
             groups = new List<PropertyGroup>();
+
+            MessageBox.Show(
+                    "Контроллер добавлен",
+                    "Сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Asterisk,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
         }
     }
 }
