@@ -40,6 +40,7 @@
             this.IsReversedProperty = new System.Windows.Forms.CheckBox();
             this.start_eval_btn = new System.Windows.Forms.Button();
             this.test_btn = new System.Windows.Forms.Button();
+            this.info_btn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // add_controller_button
@@ -143,7 +144,7 @@
             // 
             // test_btn
             // 
-            this.test_btn.Location = new System.Drawing.Point(111, 364);
+            this.test_btn.Location = new System.Drawing.Point(44, 363);
             this.test_btn.Name = "test_btn";
             this.test_btn.Size = new System.Drawing.Size(75, 23);
             this.test_btn.TabIndex = 16;
@@ -151,11 +152,22 @@
             this.test_btn.UseVisualStyleBackColor = true;
             this.test_btn.Click += new System.EventHandler(this.test_btn_Click);
             // 
+            // info_btn
+            // 
+            this.info_btn.Location = new System.Drawing.Point(194, 363);
+            this.info_btn.Name = "info_btn";
+            this.info_btn.Size = new System.Drawing.Size(75, 23);
+            this.info_btn.TabIndex = 17;
+            this.info_btn.Text = "справка";
+            this.info_btn.UseVisualStyleBackColor = true;
+            this.info_btn.Click += new System.EventHandler(this.info_btn_Click);
+            // 
             // StartWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(319, 450);
+            this.Controls.Add(this.info_btn);
             this.Controls.Add(this.test_btn);
             this.Controls.Add(this.start_eval_btn);
             this.Controls.Add(this.IsReversedProperty);
@@ -188,6 +200,7 @@
         private System.Windows.Forms.CheckBox IsReversedProperty;
         private System.Windows.Forms.Button start_eval_btn;
         private System.Windows.Forms.Button test_btn;
+        private System.Windows.Forms.Button info_btn;
     }
 }
 

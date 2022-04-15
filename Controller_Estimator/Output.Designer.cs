@@ -35,6 +35,7 @@
             this.output_grid = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.best_lb = new System.Windows.Forms.Label();
+            this.save_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.output_chart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.output_grid)).BeginInit();
             this.SuspendLayout();
@@ -83,11 +84,22 @@
             this.best_lb.TabIndex = 3;
             this.best_lb.Text = "label2";
             // 
+            // save_btn
+            // 
+            this.save_btn.Location = new System.Drawing.Point(814, 340);
+            this.save_btn.Name = "save_btn";
+            this.save_btn.Size = new System.Drawing.Size(75, 23);
+            this.save_btn.TabIndex = 4;
+            this.save_btn.Text = "Сохранить";
+            this.save_btn.UseVisualStyleBackColor = true;
+            this.save_btn.Click += new System.EventHandler(this.save_btn_Click);
+            // 
             // Output
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(901, 384);
+            this.Controls.Add(this.save_btn);
             this.Controls.Add(this.best_lb);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.output_grid);
@@ -107,5 +119,6 @@
         private System.Windows.Forms.DataGridView output_grid;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label best_lb;
+        private System.Windows.Forms.Button save_btn;
     }
 }

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ComputerModellingLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,6 +95,18 @@ namespace Controller_Estimator
             output_chart.Series.Add(dataPointSeries);
 
         }
-        
+
+        private void save_btn_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "(*.csv)|*.csv|Все файлы (*.*)|*.*";
+            fileDialog.RestoreDirectory = true;
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                FileWriter.CreateCSVfileAndWrite(StartWindow.controllers, Path.GetFullPath(fileDialog.FileName));
+            }
+
+        }
     }
 }

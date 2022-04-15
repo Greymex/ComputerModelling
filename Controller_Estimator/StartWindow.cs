@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -393,6 +395,15 @@ namespace Controller_Estimator
             //controller5.SetAdditiveEstimate(comparer.PropertyInfos);
             //controller6.SetAdditiveEstimate(comparer.PropertyInfos);
             //controller7.SetAdditiveEstimate(comparer.PropertyInfos);
+        }
+
+        private void info_btn_Click(object sender, EventArgs e)
+        {
+            string workingDirectory = Environment.CurrentDirectory;
+            string path = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            path += "\\Info.docx";
+
+            Process.Start(path);
         }
     }
 }
