@@ -72,7 +72,7 @@
             this.Controls.Add(this.evaluation_grid);
             this.Controls.Add(this.button1);
             this.Name = "PropertyWindow";
-            this.Text = "PropertyWindow";
+            this.Text = "Добавить оценки и свойства";
             ((System.ComponentModel.ISupportInitialize)(this.evaluation_grid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.output_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.output_grid = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,16 +42,16 @@
             // 
             // output_chart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.output_chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.output_chart.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.output_chart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.output_chart.Legends.Add(legend2);
             this.output_chart.Location = new System.Drawing.Point(488, 12);
             this.output_chart.Name = "output_chart";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.output_chart.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.output_chart.Series.Add(series2);
             this.output_chart.Size = new System.Drawing.Size(401, 300);
             this.output_chart.TabIndex = 0;
             this.output_chart.Text = "chart1";
@@ -105,7 +105,7 @@
             this.Controls.Add(this.output_grid);
             this.Controls.Add(this.output_chart);
             this.Name = "Output";
-            this.Text = "Output";
+            this.Text = "Результат";
             ((System.ComponentModel.ISupportInitialize)(this.output_chart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.output_grid)).EndInit();
             this.ResumeLayout(false);

@@ -181,7 +181,7 @@
             this.Controls.Add(this.add_group_button);
             this.Controls.Add(this.add_controller_button);
             this.Name = "StartWindow";
-            this.Text = "Form1";
+            this.Text = "Evaluator";
             this.ResumeLayout(false);
             this.PerformLayout();
 

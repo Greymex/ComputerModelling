@@ -44,21 +44,43 @@ namespace Controller_Estimator
                 }
             }
             propertyWindow.ShowDialog();
-            groups.Add(propertyWindow.filled_group);
+
+            if (propertyWindow.filled_group != null)
+                groups.Add(propertyWindow.filled_group);
         }
 
         private void add_controller_btn_Click(object sender, EventArgs e)
         {
-            StartWindow.controllers.Add(new Controller(controller_name.Text, groups));
-            groups = new List<PropertyGroup>();
-
-            MessageBox.Show(
+            if (!StartWindow.controllers.Contains(StartWindow.controllers.Find(x => x.ControllerName == controller_name.Text)) &&
+                !String.IsNullOrWhiteSpace(controller_name.Text))
+            {
+                StartWindow.controllers.Add(new Controller(controller_name.Text, groups));
+                MessageBox.Show(
                     "Контроллер добавлен",
                     "Сообщение",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Asterisk,
                     MessageBoxDefaultButton.Button1,
                     MessageBoxOptions.DefaultDesktopOnly);
+
+                groups = new List<PropertyGroup>();
+                this.Activate();
+            }
+            else
+            {
+                MessageBox.Show(
+                    this,
+                    "Имя контроллера указано неверно или контроллер с таким именем уже существует!",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                this.Activate();
+            }
+            
+
+            
         }
     }
 }

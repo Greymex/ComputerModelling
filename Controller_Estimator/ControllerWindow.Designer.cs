@@ -137,7 +137,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.properties_groups_cb);
             this.Name = "ControllerWindow";
-            this.Text = "ControllerWindow";
+            this.Text = "Добавить";
             ((System.ComponentModel.ISupportInitialize)(this.experts_count)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

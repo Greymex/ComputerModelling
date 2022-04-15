@@ -68,6 +68,9 @@ namespace Controller_Estimator
         {
             PropertyGroup new_group = new PropertyGroup(group.PropetyGroupName);
             Property p;
+
+            bool IsEmptyCell = false;
+
             for (int i = 0; i < evaluation_grid.RowCount; i++)
             {
                 List<int> assesments = new List<int>();
@@ -83,7 +86,19 @@ namespace Controller_Estimator
                 new_group.AddProperty(p);
             }
 
-            filled_group = new_group;
+            for (int i = 0; i < evaluation_grid.RowCount; i++)
+            {
+                
+                for (int j = 1; j < evaluation_grid.ColumnCount; j++)
+                {
+                    if (String.IsNullOrWhiteSpace(evaluation_grid[j, i].Value.ToString()))
+                        IsEmptyCell = true;
+                }
+            }
+
+            if (!IsEmptyCell)
+                filled_group = new_group;
+
             Close();
         }
     }
