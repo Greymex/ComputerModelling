@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ComputerModellingLib
 {
+    [Serializable()]
     public class PropertyGroup
     {
         private List<Property> properties = new List<Property>();
@@ -79,20 +81,6 @@ namespace ComputerModellingLib
             }
         }
 
-        //Обновить оценки экспертов
-        public void UpdateExpertAssessments(string name, List<int> ExpertAssessments)
-        {
-            propertyesAverageExpertAssessmentsSum = 0;
-            foreach (Property property in properties)
-            {
-                if (property.Name == name)
-                {
-                    property.ExpertAssessments = ExpertAssessments;
-                    return;
-                }
-            }
-        }
-
         public double AdditiveEstimate { get; private set; }
         //Получение Аддитивной оценки
         public double SetAdditiveEstimate(List<PropertyInfo> propertyInfos)
@@ -104,5 +92,14 @@ namespace ComputerModellingLib
             }
             return AdditiveEstimate;
         }
+
+        public void Reload()
+        {
+            AdditiveEstimate = 0;
+            propertyesAverageExpertAssessmentsSum = 0;
+
+        }
+
+        
     }
 }

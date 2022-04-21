@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Controller_Estimator.Properties
+namespace Estimator_v2._1.Properties
 {
 
 

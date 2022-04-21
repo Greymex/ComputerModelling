@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7EC014A1-F4F9-4989-88FE-7A6455DDE3F5}</ProjectGuid>
+    <ProjectGuid>{7820780A-5545-495D-A48A-E77F6DAAE7A6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Controller_Estimator</RootNamespace>
-    <AssemblyName>Controller_Estimator</AssemblyName>
+    <RootNamespace>Estimator_v2._1</RootNamespace>
+    <AssemblyName>Estimator v2.1</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,11 +47,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControllerWindow.cs">
+    <Compile Include="AssessmentsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssessmentsPanel.Designer.cs">
+      <DependentUpon>AssessmentsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangeAssessmentsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ChangeAssessmentsPanel.Designer.cs">
+      <DependentUpon>ChangeAssessmentsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ControllersPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ControllersPanel.Designer.cs">
+      <DependentUpon>ControllersPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ControllerWindow.Designer.cs">
-      <DependentUpon>ControllerWindow.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GroupPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GroupPanel.Designer.cs">
+      <DependentUpon>GroupPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Output.cs">
       <SubType>Form</SubType>
@@ -62,32 +83,26 @@
     <Compile Include="Output.Designer.cs">
       <DependentUpon>Output.cs</DependentUpon>
     </Compile>
-    <Compile Include="PropertyView.cs" />
-    <Compile Include="PropertyWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyWindow.Designer.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="StartWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="StartWindow.Designer.cs">
-      <DependentUpon>StartWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ControllerWindow.resx">
-      <DependentUpon>ControllerWindow.cs</DependentUpon>
+    <Compile Include="PropertyGroupsComparer.cs" />
+    <EmbeddedResource Include="AssessmentsPanel.resx">
+      <DependentUpon>AssessmentsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChangeAssessmentsPanel.resx">
+      <DependentUpon>ChangeAssessmentsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ControllersPanel.resx">
+      <DependentUpon>ControllersPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GroupPanel.resx">
+      <DependentUpon>GroupPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Output.resx">
       <DependentUpon>Output.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyWindow.resx">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="StartWindow.resx">
-      <DependentUpon>StartWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -113,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComputerModellingLib\ComputerModellingLib.csproj">
-      <Project>{9774fdd3-5019-4c91-83b9-53c0a9d8fde6}</Project>
+      <Project>{9774FDD3-5019-4C91-83B9-53C0A9D8FDE6}</Project>
       <Name>ComputerModellingLib</Name>
     </ProjectReference>
   </ItemGroup>

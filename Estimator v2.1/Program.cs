@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Controller_Estimator
+namespace Estimator_v2._1
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace Controller_Estimator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StartWindow());
+            Application.Run(new MainForm());
         }
     }
 }

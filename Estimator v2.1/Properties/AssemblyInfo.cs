@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Controller_Estimator")]
+[assembly: AssemblyTitle("Estimator v2.1")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Controller_Estimator")]
+[assembly: AssemblyProduct("Estimator v2.1")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("7ec014a1-f4f9-4989-88fe-7a6455dde3f5")]
+[assembly: Guid("7820780a-5545-495d-a48a-e77f6daae7a6")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //
