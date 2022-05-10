@@ -1,14 +1,9 @@
 ﻿using ComputerModellingLib;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Estimator_v2._1
 {
@@ -22,22 +17,24 @@ namespace Estimator_v2._1
         //Добавление группы свойств
         private void add_group_Click(object sender, EventArgs e)
         {
-            if (groups_panel.ValidateGroupControl())
+            if (group_panel.ValidateGroupControl())
             {
-                groups_panel.AddGroups();
-                groups_panel.BuildGroupsComboBox();
+                group_panel.AddGroups();
+                group_panel.BuildGroupsComboBox();
             }
         }
 
         //Добавление свойства
         private void add_property_Click(object sender, EventArgs e)
         {
-            if (groups_panel.ValidatePropertyControl())
+            if (group_panel.ValidatePropertyControl())
             {
-                groups_panel.AddProperty();
-                groups_panel.BuildPropertiesViewItems();
+                group_panel.AddProperty();
+                group_panel.BuildPropertiesViewItems();
             }
         }
+        
+
         //Добавление оценок
         private void add_value_Click(object sender, EventArgs e)
         {
@@ -69,10 +66,14 @@ namespace Estimator_v2._1
             {
                 try
                 {
-                    assessments_panel.AddGroupToController();
-                    controllers_panel.BuildControllersViewItems();
-                    assessments_panel.ClearGrid();
-                    MessageBox.Show("Группа успешно добавлена!");
+                    if (controllers_panel.SelectedItem is Controller)
+                    {
+                        assessments_panel.AddGroupToController(controllers_panel.SelectedItem as Controller);
+                        controllers_panel.BuildControllersViewItems();
+                        assessments_panel.ClearGrid();
+                        MessageBox.Show("Группа успешно добавлена!");
+                    }
+                    else MessageBox.Show("Выберите контроллер!");
                 }
                 catch (Exception ex)
                 {
@@ -97,20 +98,26 @@ namespace Estimator_v2._1
                 if (loaded_controller != null)
                 {
                     controllers_panel.BuildControllersViewItems();
-                    groups_panel.AddGroups(loaded_controller.PropertyGroups);
-                    groups_panel.BuildGroupsComboBox();
-                    groups_panel.BuildPropertiesViewItems();
+                    group_panel.AddGroups(loaded_controller.PropertyGroups);
+                    group_panel.BuildGroupsComboBox();
+                    group_panel.BuildPropertiesViewItems();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Произошла ошибка! Проверьте правильность выбранного файла!", "Ошибка!");
             }
         }
 
         //Оценка контроллеров
         private void оценитьToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (controllers_panel.Controllers.Count == 0)
+            {
+                MessageBox.Show("Добавьте хотя бы один контроллер!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Comparer comparer = new Comparer(controllers_panel.Controllers);
 
             foreach (Controller controller in controllers_panel.Controllers)
@@ -118,20 +125,37 @@ namespace Estimator_v2._1
                 controller.SetAdditiveEstimate(comparer.PropertyInfos);
             }
 
-            Output output = new Output();
-            output.BuildGrid(controllers_panel.Controllers.First().PropertyGroups, controllers_panel.Controllers);
-            output.GetAnswer();
-            output.Show();
+            try
+            {
+                Output output = new Output();
+                output.BuildGrid(controllers_panel.Controllers.First().PropertyGroups, controllers_panel.Controllers);
+                output.GetAnswer();
+                output.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка! Проверьте правильность выбранного файла!", "Ошибка!");
+            }
+
+            
         }
 
         //Обновление контроллеров для сохранения
         private void Update_controllers_for_save(object sender, EventArgs e)
         {
-            save_ctrl_StripMenuItem.DropDownItems.Clear();
-            foreach (var controller in controllers_panel.Controllers)
+            try
             {
-                save_ctrl_StripMenuItem.DropDownItems.Add(controller.ControllerName);
+                save_ctrl_StripMenuItem.DropDownItems.Clear();
+                foreach (var controller in controllers_panel.Controllers)
+                {
+                    save_ctrl_StripMenuItem.DropDownItems.Add(controller.ControllerName);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
         //Сохранить контроллер
@@ -150,7 +174,7 @@ namespace Estimator_v2._1
 
         private void change_marks_btn_Click(object sender, EventArgs e)
         {
-            change_assessments_panel.BuildGrid();
+            
         }
 
         private void save_new_values_btn_Click(object sender, EventArgs e)
@@ -159,11 +183,15 @@ namespace Estimator_v2._1
             {
                 try
                 {
-                    change_assessments_panel.AddGroupToController();
-                    controllers_panel.BuildControllersViewItems();
-                    change_assessments_panel.SetControllers(controllers_panel.Controllers);
-                    change_assessments_panel.ClearGrid();
-                    MessageBox.Show("Группа успешно обновлена!");
+                    if (controllers_panel.SelectedController != null && controllers_panel.SelectedItem != null)
+                    {
+                        change_assessments_panel.AddGroupToController(controllers_panel.SelectedController, controllers_panel.SelectedItem as PropertyGroup);
+                        controllers_panel.BuildControllersViewItems();
+                        change_assessments_panel.SetControllers(controllers_panel.Controllers);
+                        change_assessments_panel.ClearGrid();
+                        MessageBox.Show("Группа успешно обновлена!");
+                    }
+                    else MessageBox.Show("Сначала выберите группу в окне Контроллеры!");
                 }
                 catch (Exception ex)
                 {
@@ -175,29 +203,176 @@ namespace Estimator_v2._1
 
         private void DeleteChosenItem_Click(object sender, EventArgs e)
         {
-            groups_panel.DeleteChosenItem();
-            groups_panel.BuildGroupsComboBox();
-            groups_panel.BuildPropertiesViewItems();
+            group_panel.DeleteChosenItem();
+            group_panel.BuildGroupsComboBox();
+            group_panel.BuildPropertiesViewItems();
         }
 
         private void RemoveChosenElement_Click(object sender, EventArgs e)
         {
-            controllers_panel.DeleteChosenItem();
-            controllers_panel.BuildControllersViewItems();
+            if (controllers_panel.SelectedItem != null)
+            {
+                controllers_panel.DeleteChosenItem();
+                controllers_panel.BuildControllersViewItems();
+            }
+            else MessageBox.Show("Сначала выберите элемент!");
         }
 
         //Обновление групп и контроллеров в комбобоксах
         private void Update_Groups_and_Ctrls(object sender, EventArgs e)
         {
-            assessments_panel.SetGroups(groups_panel.PropertyGroups);
+            controllers_panel.BuildControllersViewItems();
+            assessments_panel.SetGroups(group_panel.PropertyGroups);
             assessments_panel.UpdateGroupsComboBox();
             assessments_panel.SetControllers(controllers_panel.Controllers);
-            assessments_panel.UpdateControllersComboBox();
+            
             assessments_panel.ClearGrid();
             change_assessments_panel.SetControllers(controllers_panel.Controllers);
-            change_assessments_panel.UpdateControllersComboBox();
-            change_assessments_panel.UpdateGroupsComboBox();
             change_assessments_panel.ClearGrid();
+
+            if (controllers_panel.SelectedController != null)
+                assessments_panel.SetControllerForView(controllers_panel.SelectedController);
+            else assessments_panel.SetControllerForView();
+        }
+
+        private void оценитьИСохранитьВExcelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controllers_panel.Controllers.Count == 0)
+            {
+                MessageBox.Show("Добавьте хотя бы один контроллер!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            оценитьToolStripMenuItem1_Click(sender, e);
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "(*.xlsx)|*.xlsx|Все файлы (*.*)|*.*";
+            fileDialog.RestoreDirectory = true;
+
+            try
+            {
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FileWriter.CreateXLCfileAndWrite(controllers_panel.Controllers,
+                        controllers_panel.Controllers[0].PropertyGroups[0].Properties[0].ExpertAssessments.Count,
+                        Path.GetFullPath(fileDialog.FileName));
+                    //FileWriter.CreateCSVfileAndWrite(controllers_panel.Controllers,
+                    //    controllers_panel.Controllers[0].PropertyGroups[0].Properties[0].ExpertAssessments.Count, 
+                    //    Path.GetFullPath(fileDialog.FileName));
+                    MessageBox.Show("Данные сохранены");
+
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка! Файл не сохранен!");
+            }
+
+            
+
+            
+        }
+
+        private void add_group_to_controller_Click(object sender, EventArgs e)
+        {
+            if (controllers_panel.SelectedController != null)
+            {
+                controllers_tab.SelectTab("add_assessments_tab");
+                assessments_panel.SetControllerForView(controllers_panel.SelectedController);
+            }
+            else MessageBox.Show("Сначала выберите контроллер!");
+        }
+
+        private void change_group_Click(object sender, EventArgs e)
+        {
+
+            if (controllers_panel.SelectedController != null && controllers_panel.SelectedItem is PropertyGroup)
+            {
+                controllers_tab.SelectTab("change_assessments_tab");
+                change_assessments_panel.BuildGrid(controllers_panel.SelectedController, controllers_panel.SelectedItem as PropertyGroup);
+            }
+            else MessageBox.Show("Сначала выберите группу!");
+
+        }
+
+        private void save_ctrl_StripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controllers_panel.Controllers.Count == 0)
+            {
+                MessageBox.Show("В системе не найдено контроллеров для сохранения!", "Ошибка!");
+            }
+        }
+
+        private void сохранитьВсеКонтроллерыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controllers_panel.Controllers.Count == 0)
+            {
+                MessageBox.Show("В системе не найдено контроллеров для сохранения!", "Ошибка!");
+            }
+            else
+            {
+                ControllerGroupSaver groupSaver = new ControllerGroupSaver();
+                SaveFileDialog fileDialog = new SaveFileDialog();
+                fileDialog.Filter = "Все файлы (*.*)|*.*";
+                fileDialog.RestoreDirectory = true;
+                fileDialog.InitialDirectory = Environment.CurrentDirectory + @"\Controllers";
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    groupSaver.Save(Path.GetDirectoryName(fileDialog.FileName), Path.GetFileNameWithoutExtension(fileDialog.FileName), controllers_panel.Controllers);
+                    MessageBox.Show("Данные сохранены");
+                }
+
+            }
+        }
+
+        private void загрузитьГруппуКонтроллеровToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                controllers_panel.LoadControllersList();
+                controllers_panel.BuildControllersViewItems();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Контроллеры не были загружены по причине того, что файл не был выбран!", "Загрузка отменена!");
+            }
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string path = Environment.CurrentDirectory;
+                path += "\\Info.pdf";
+                Process.Start(path);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Файл справки не найден!");
+            }
+
+            
+        }
+
+        private void Default_btn_Click(object sender, EventArgs e)
+        {
+            group_panel.ClearAllGroups();
+            group_panel.AddStandartGroups();
+            group_panel.BuildPropertiesViewItems();
+            group_panel.BuildGroupsComboBox();
+            Update_Groups_and_Ctrls(sender, e);
+        }
+
+        private void ReturnLastDeleted_btn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                controllers_panel.GetBackDeletedItem();
+                controllers_panel.BuildControllersViewItems();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка!");
+            }
         }
     }
 }

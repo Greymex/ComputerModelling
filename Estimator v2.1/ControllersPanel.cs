@@ -16,7 +16,10 @@ namespace Estimator_v2._1
     {
         // Свойство, хранящее отображаемый объект модели данных
         public List<Controller> Controllers { get; private set; }
-        private object SelectedItem;
+        public object SelectedItem { get; private set; }
+        public Controller SelectedController { get; private set; }
+        public object LastDeleted { get; private set; }
+        public string ControllerNameForDeletedGroup { get; private set; }
 
         //Конструктор
         public ControllersPanel()
@@ -28,7 +31,12 @@ namespace Estimator_v2._1
         //Добавление контроллера
         public void AddController()
         {
-            Controllers.Add(new Controller(controller_name.Text));
+            Controller controller = new Controller(controller_name.Text);
+            Controllers.Add(controller);
+            SelectedController = controller;
+            //BuildControllersViewItems();
+            //controllers_view.SelectedNode = controllers_view.Nodes.Find(controller.ControllerName, false)[0];
+            controller_name.Text = "";
         }
 
         //Загрузка контроллера
@@ -42,19 +50,62 @@ namespace Estimator_v2._1
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 Controller loaded_controller = Controller.Load(Path.GetFileNameWithoutExtension(fileDialog.FileName));
-                foreach (var controller in Controllers)
+                if (loaded_controller != null)
                 {
-                    if (controller.ControllerName == loaded_controller.ControllerName)
+                    foreach (var controller in Controllers)
                     {
-                        MessageBox.Show("Такой контроллер уже существует!");
-                        return null;
+                        if (controller.ControllerName == loaded_controller.ControllerName)
+                        {
+                            MessageBox.Show("Такой контроллер уже существует!");
+                            return null;
+                        }
                     }
+                    Controllers.Add(loaded_controller);
+                    MessageBox.Show($"Контроллер {loaded_controller.ControllerName} загружен!");
+                    return loaded_controller;
                 }
-                Controllers.Add(loaded_controller);
-                MessageBox.Show($"Контроллер {loaded_controller.ControllerName} загружен!");
-                return loaded_controller;
+                else
+                {
+                    MessageBox.Show("Произошла ошибка!");
+                }
+                
             }
             return null;
+        }
+
+        public void LoadControllersList()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.InitialDirectory = Environment.CurrentDirectory + @"\Controllers" + @"\ControllersGroup" + @"\";
+            fileDialog.Filter = "Все файлы (*.*)|*.*";
+            fileDialog.RestoreDirectory = true;
+            List<Controller> loaded_list = null;
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                loaded_list = ControllerGroupSaver.Load(Path.GetFullPath(fileDialog.FileName));
+                
+            }
+
+            foreach (var item in loaded_list)
+            {
+                if (Controllers.Contains(Controllers.Find(x => x.ControllerName == item.ControllerName)))
+                {
+                    MessageBox.Show("Один или несколько из контроллеров загружаемого списка уже содержатся в системе - контроллеры с одинаковыми именами не могут существовать!" +
+                        " Для добавления группы рекомендуется очистить список контроллеров!");
+                    return;
+                }
+            }
+
+            if (loaded_list != null)
+            {
+                foreach (var item in loaded_list)
+                {
+                    Controllers.Add(item);
+                }
+                MessageBox.Show($"Контроллеры успешно загружены!");
+            }
+            else MessageBox.Show("Произошла непредвиденная ошибка...");
         }
 
         public void ClearControllers()
@@ -78,6 +129,8 @@ namespace Estimator_v2._1
             foreach (var controller in Controllers)
             {
                 TreeNode node = new TreeNode(controller.ControllerName);
+                //node.Name = controller.ControllerName;
+                controllers_view.SelectedNode = node;
                 foreach (var group in controller.PropertyGroups)
                 {
                     node.Nodes.Add(group.PropetyGroupName);
@@ -87,6 +140,9 @@ namespace Estimator_v2._1
                 controllers_view.Nodes.Add(node);
             }
             controllers_view.ExpandAll();
+            controllers_view.Focus();
+            SelectedItem = Controllers.Find(x => x.ControllerName == controllers_view.SelectedNode.Text);
+            SelectedController = SelectedItem as Controller;
         }
 
         //Проверка на правильность введенных данных
@@ -103,7 +159,7 @@ namespace Estimator_v2._1
             {
                 foreach (var controller in Controllers)
                 {
-                    if (controller.ControllerName == controller_name.Text)
+                    if (controller.ControllerName.ToLower() == controller_name.Text.ToLower())
                     {
                         MessageBox.Show("Такой контроллер уже существует!");
                         return false;
@@ -120,6 +176,7 @@ namespace Estimator_v2._1
             if (Controllers.Contains(Controllers.Find(x => x.ControllerName == e.Node.Text)))
             {
                 SelectedItem = Controllers.Find(x => x.ControllerName == e.Node.Text);
+                SelectedController = SelectedItem as Controller;
                 return;
             }
 
@@ -132,6 +189,7 @@ namespace Estimator_v2._1
                         if (controller.PropertyGroups.Contains(controller.PropertyGroups.Find(t => t.PropetyGroupName == e.Node.Text)))
                         {
                             SelectedItem = controller.PropertyGroups.Find(t => t.PropetyGroupName == e.Node.Text);
+                            SelectedController = controller;
                             return;
                         }
                     }
@@ -144,6 +202,7 @@ namespace Estimator_v2._1
         {
             if (SelectedItem is Controller)
             {
+                LastDeleted = SelectedItem;
                 Controllers.Remove(SelectedItem as Controller);
                 MessageBox.Show($"Контроллер {(SelectedItem as Controller).ControllerName} был удален!");
             }
@@ -153,12 +212,46 @@ namespace Estimator_v2._1
                 {
                     if (controller.PropertyGroups.Contains(SelectedItem as PropertyGroup))
                     {
+                        LastDeleted = SelectedItem;
+                        ControllerNameForDeletedGroup = controller.ControllerName;
                         controller.PropertyGroups.Remove(SelectedItem as PropertyGroup);
                         MessageBox.Show($"Группа {(SelectedItem as PropertyGroup).PropetyGroupName} была удалена!");
+                        return;
                     }
                 }
             }
 
+        }
+
+        //Вернуть удаляемый элемент
+        public void GetBackDeletedItem()
+        {
+            if (LastDeleted == null)
+            {
+                MessageBox.Show("Последний удаленный элемент уже был восстановлен или его не существует!");
+                return;
+            }
+
+            if (LastDeleted is Controller)
+            {
+                Controllers.Add(LastDeleted as Controller);
+                MessageBox.Show($"Контроллер {(LastDeleted as Controller).ControllerName} был восстановлен!");
+                LastDeleted = null;
+            }
+            else
+            {
+                foreach (var controller in Controllers)
+                {
+                    if (controller.ControllerName == ControllerNameForDeletedGroup)
+                    {
+                        controller.PropertyGroups.Add(LastDeleted as PropertyGroup);
+                        MessageBox.Show($"Группа {(LastDeleted as PropertyGroup).PropetyGroupName} была восстановлена!");
+                        LastDeleted = null;
+                        ControllerNameForDeletedGroup = "";
+                        return;
+                    }
+                }
+            }
         }
     }
 }

@@ -33,8 +33,8 @@
             this.experts_count = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.properties_groups_cb = new System.Windows.Forms.ComboBox();
+            this.controller_lb = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.all_ctrl_cb = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.evaluation_grid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.experts_count)).BeginInit();
             this.SuspendLayout();
@@ -52,6 +52,7 @@
             this.evaluation_grid.Name = "evaluation_grid";
             this.evaluation_grid.Size = new System.Drawing.Size(887, 348);
             this.evaluation_grid.TabIndex = 2;
+            this.evaluation_grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Delete_Pressed);
             // 
             // label1
             // 
@@ -67,11 +68,6 @@
             // 
             this.experts_count.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.experts_count.Location = new System.Drawing.Point(467, 24);
-            this.experts_count.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             this.experts_count.Minimum = new decimal(new int[] {
             1,
             0,
@@ -104,28 +100,33 @@
             this.properties_groups_cb.Size = new System.Drawing.Size(121, 21);
             this.properties_groups_cb.TabIndex = 32;
             // 
+            // controller_lb
+            // 
+            this.controller_lb.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.controller_lb.AutoSize = true;
+            this.controller_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.controller_lb.Location = new System.Drawing.Point(199, 439);
+            this.controller_lb.Name = "controller_lb";
+            this.controller_lb.Size = new System.Drawing.Size(162, 15);
+            this.controller_lb.TabIndex = 37;
+            this.controller_lb.Text = "Контроллер не выбран";
+            // 
             // label2
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label2.Location = new System.Drawing.Point(34, 424);
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(0, 439);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(153, 57);
+            this.label2.Size = new System.Drawing.Size(202, 15);
             this.label2.TabIndex = 36;
-            this.label2.Text = "Выберите котроллер, которому нужно добавить данную группу:";
-            // 
-            // all_ctrl_cb
-            // 
-            this.all_ctrl_cb.FormattingEnabled = true;
-            this.all_ctrl_cb.Location = new System.Drawing.Point(193, 437);
-            this.all_ctrl_cb.Name = "all_ctrl_cb";
-            this.all_ctrl_cb.Size = new System.Drawing.Size(121, 21);
-            this.all_ctrl_cb.TabIndex = 37;
+            this.label2.Text = "Экспертная оценка контроллера:";
             // 
             // AssessmentsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.all_ctrl_cb);
+            this.Controls.Add(this.controller_lb);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.experts_count);
@@ -148,7 +149,7 @@
         public System.Windows.Forms.NumericUpDown experts_count;
         private System.Windows.Forms.Label label6;
         public System.Windows.Forms.ComboBox properties_groups_cb;
+        private System.Windows.Forms.Label controller_lb;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox all_ctrl_cb;
     }
 }

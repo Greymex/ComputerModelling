@@ -5,9 +5,7 @@ VisualStudioVersion = 15.0.28307.1758
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerModellingLib", "ComputerModellingLib\ComputerModellingLib.csproj", "{9774FDD3-5019-4C91-83B9-53C0A9D8FDE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsageExample", "UsageExample\UsageExample.csproj", "{B59801E5-B872-4420-8F5C-6111222B0F36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estimator v2.1", "Estimator v2.1\Estimator v2.1.csproj", "{7820780A-5545-495D-A48A-E77F6DAAE7A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLC Expert", "Estimator v2.1\PLC Expert.csproj", "{7820780A-5545-495D-A48A-E77F6DAAE7A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +23,6 @@ Global
 		{9774FDD3-5019-4C91-83B9-53C0A9D8FDE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9774FDD3-5019-4C91-83B9-53C0A9D8FDE6}.Release|x86.ActiveCfg = Release|Any CPU
 		{9774FDD3-5019-4C91-83B9-53C0A9D8FDE6}.Release|x86.Build.0 = Release|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Debug|x86.Build.0 = Debug|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Release|x86.ActiveCfg = Release|Any CPU
-		{B59801E5-B872-4420-8F5C-6111222B0F36}.Release|x86.Build.0 = Release|Any CPU
 		{7820780A-5545-495D-A48A-E77F6DAAE7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7820780A-5545-495D-A48A-E77F6DAAE7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7820780A-5545-495D-A48A-E77F6DAAE7A6}.Debug|x86.ActiveCfg = Debug|Any CPU

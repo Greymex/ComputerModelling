@@ -18,10 +18,6 @@ namespace ComputerModellingLib
             {
                 return propetyName;
             }
-            set
-            {
-                propetyName = value;
-            }
         }
 
         private double propertyValue;

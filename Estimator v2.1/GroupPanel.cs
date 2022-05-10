@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ComputerModellingLib;
-using Estimator_v2._1;
 
 namespace Estimator_v2
 {
@@ -23,6 +17,47 @@ namespace Estimator_v2
         {
             InitializeComponent();
             PropertyGroups = new List<PropertyGroup>();
+            AddStandartGroups();
+            BuildPropertiesViewItems();
+            BuildGroupsComboBox();
+        }
+
+        //Стандартные группы
+        public void AddStandartGroups()
+        {
+            Property property = new Property("Время выполнения операции", 0, new List<int>(), true);
+            Property property1 = new Property("Функциональность", 0, new List<int>(), false);
+            Property property2 = new Property("Наработка на отказ", 0, new List<int>(), false);
+            Property property3 = new Property("Среднее время восстановления", 0, new List<int>(), true);
+            Property property4 = new Property("Стоимость оборудования", 0, new List<int>(), true);
+            Property property5 = new Property("Стоимость монтажа", 0, new List<int>(), true);
+            Property property6 = new Property("Потребляемая мощность", 0, new List<int>(), true);
+            Property property7 = new Property("Гарантийный срок", 0, new List<int>(), false);
+            Property property8 = new Property("Масса", 0, new List<int>(), true);
+            //группы свойств контроллера 1
+
+            PropertyGroup propertyGroup1 = new PropertyGroup("Производительность");
+            PropertyGroup propertyGroup2 = new PropertyGroup("Надёжность");
+            PropertyGroup propertyGroup3 = new PropertyGroup("Затраты");
+
+            propertyGroup1.AddProperty(property);
+            propertyGroup1.AddProperty(property1);
+            propertyGroup2.AddProperty(property2);
+            propertyGroup2.AddProperty(property3);
+            propertyGroup3.AddProperty(property4);
+            propertyGroup3.AddProperty(property5);
+            propertyGroup3.AddProperty(property6);
+            propertyGroup3.AddProperty(property7);
+            propertyGroup3.AddProperty(property8);
+
+            PropertyGroups.Add(propertyGroup1);
+            PropertyGroups.Add(propertyGroup2);
+            PropertyGroups.Add(propertyGroup3);
+        }
+
+        public void ClearAllGroups()
+        {
+            PropertyGroups.Clear();
         }
 
         //Занесение данных из PropertyGroup в контролы
@@ -47,7 +82,9 @@ namespace Estimator_v2
                 TreeNode node = new TreeNode(group.PropetyGroupName);
                 foreach (var property in group.Properties)
                 {
-                    node.Nodes.Add(property.Name);
+                    if (!property.Reversed)
+                        node.Nodes.Add(property.Name + "*");
+                    else node.Nodes.Add(property.Name);
                 }
                 Font boldFont = new Font("Times New Roman", 12, FontStyle.Regular);
                 node.NodeFont = boldFont;
@@ -61,6 +98,7 @@ namespace Estimator_v2
         public void AddGroups()
         {
             PropertyGroups.Add(new PropertyGroup(property_group_name.Text));
+            property_group_name.Text = "";
         }
 
         //Занесение групп при загрузке в PropertyGroup
@@ -71,18 +109,13 @@ namespace Estimator_v2
                 if (!PropertyGroups.Contains(PropertyGroups.Find(x => x.PropetyGroupName == group.PropetyGroupName)))
                 {
                     PropertyGroups.Add(group);
-                    CheckProperties(group);
+                    //CheckProperties(group);
                 }
-            }
-        }
-
-        //Проверка свойств в группе на обратность и установка на передачу в контрол
-        private void CheckProperties(PropertyGroup group)
-        {
-            foreach (var property in group.Properties)
-            {
-                if (property.Reversed)
-                    property.Name += "*";
+                else
+                {
+                    PropertyGroups.Remove(PropertyGroups.Find(x => x.PropetyGroupName == group.PropetyGroupName));
+                    PropertyGroups.Add(group);
+                }
             }
         }
 
@@ -90,20 +123,12 @@ namespace Estimator_v2
         public void AddProperty()
         {
             string name = property_name.Text;
-            if (IsReversedProperty.Checked)
-                name += "*";
+            property_name.Text = "";
+            //if (IsReversedProperty.Checked)
+            //    name += "*";
             PropertyGroups
                 .Find(x => x.PropetyGroupName == group_names_cb.SelectedItem.ToString())
-                .AddProperty(new Property(name, 0, new List<int>(), IsReversedProperty.Checked));
-        }
-
-        //Добавление свойства при загрузке
-        public void AddProperty(Property property)
-        {
-            string name = property.Name;
-            PropertyGroups
-                .Find(x => x.PropetyGroupName == group_names_cb.SelectedItem.ToString())
-                .AddProperty(new Property(name, 0, new List<int>(), IsReversedProperty.Checked));
+                .AddProperty(new Property(name, 0, new List<int>(), !IsReversedProperty.Checked));
         }
 
         //Проверка на правильность введенных данных
@@ -120,7 +145,7 @@ namespace Estimator_v2
             {
                 foreach (var group in PropertyGroups)
                 {
-                    if (group.PropetyGroupName == property_group_name.Text)
+                    if (group.PropetyGroupName.ToLower() == property_group_name.Text.ToLower())
                     {
                         MessageBox.Show("Такая группа уже существует!");
                         return false;
@@ -147,7 +172,7 @@ namespace Estimator_v2
                 {
                     foreach (var property in group.Properties)
                     {
-                        if (property.Name == property_name.Text)
+                        if (property.Name.ToLower() == property_name.Text.ToLower())
                         {
                             MessageBox.Show("Такое свойство уже существует!");
                             return false;
@@ -163,17 +188,18 @@ namespace Estimator_v2
         //Выбор свойтсва или группы при клике по нему в представлении
         private void SelectItemFromTree(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (PropertyGroups.Contains(PropertyGroups.Find(x => x.PropetyGroupName == e.Node.Text)))
+            string node_name = e.Node.Text.Replace("*", "");
+            if (PropertyGroups.Contains(PropertyGroups.Find(x => x.PropetyGroupName == node_name)))
             {
-                SelectedItem = PropertyGroups.Find(x => x.PropetyGroupName == e.Node.Text);
+                SelectedItem = PropertyGroups.Find(x => x.PropetyGroupName == node_name);
                 return;
             }
 
             foreach (var group in PropertyGroups)
             {
-                if (group.Properties.Contains(group.Properties.Find(t => t.Name == e.Node.Text)))
+                if (group.Properties.Contains(group.Properties.Find(t => t.Name == node_name)))
                 {
-                    SelectedItem = group.Properties.Find(t => t.Name == e.Node.Text);
+                    SelectedItem = group.Properties.Find(t => t.Name == node_name);
                     return;
                 }
             }

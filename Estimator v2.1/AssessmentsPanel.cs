@@ -37,6 +37,18 @@ namespace Estimator_v2._1
             this.controllers = controllers;
         }
 
+        //Обозначение контроллера
+        public void SetControllerForView(Controller controller)
+        {
+            if (controller != null)
+                controller_lb.Text = controller.ControllerName;
+        }
+
+        public void SetControllerForView()
+        {
+                controller_lb.Text = "Контроллер не выбран";
+        }
+
         //Создание грида со всеми свойствами
         public void BuildGrid()
         {
@@ -60,13 +72,6 @@ namespace Estimator_v2._1
         //Создание колонок
         private void BuildColumns(int experts_count)
         {
-            DataGridViewColumn first_column = new DataGridViewColumn();
-            first_column.HeaderText = "Значение критерия";
-            first_column.Width = 120;
-            first_column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            first_column.CellTemplate = new DataGridViewTextBoxCell();
-            evaluation_grid.Columns.Add(first_column);
-            
             for (int i = 0; i < experts_count; i++)
             {
                 DataGridViewColumn column = new DataGridViewColumn();
@@ -77,6 +82,13 @@ namespace Estimator_v2._1
                 column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 evaluation_grid.Columns.Add(column);
             }
+
+            DataGridViewColumn last_column = new DataGridViewColumn();
+            last_column.HeaderText = "Значение критерия";
+            last_column.Width = 120;
+            last_column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            last_column.CellTemplate = new DataGridViewTextBoxCell();
+            evaluation_grid.Columns.Add(last_column);
         }
 
         //Создание рядов
@@ -89,12 +101,13 @@ namespace Estimator_v2._1
 
             for (int i = 0; i < rows_count; i++)
             {
-                //if (property_group.Properties[i].Reversed)
-                //    evaluation_grid.Rows[i].HeaderCell.Value = property_group.Properties[i].Name + "*";
-                evaluation_grid.Rows[i].HeaderCell.Value = property_group.Properties[i].Name;
+                if (!property_group.Properties[i].Reversed)
+                    evaluation_grid.Rows[i].HeaderCell.Value = property_group.Properties[i].Name + "*";
+                else evaluation_grid.Rows[i].HeaderCell.Value = property_group.Properties[i].Name;
+                //evaluation_grid.Rows[i].HeaderCell.Value = property_group.Properties[i].Name;
             }
 
-            evaluation_grid.RowHeadersWidth = 200;
+            evaluation_grid.RowHeadersWidth = 220;
         }
 
         //Обновление комбобоксов в соответствии с данными
@@ -110,38 +123,26 @@ namespace Estimator_v2._1
                 properties_groups_cb.SelectedIndex = 0;
             else properties_groups_cb.Text = "";
         }
-
-        public void UpdateControllersComboBox()
-        {
-            all_ctrl_cb.Items.Clear();
-
-            foreach (var controller in controllers)
-            {
-                all_ctrl_cb.Items.Add(controller.ControllerName);
-            }
-            if (all_ctrl_cb.Items.Count > 0)
-                all_ctrl_cb.SelectedIndex = 0;
-            else all_ctrl_cb.Text = "";
-        }
+        
 
         //Добавление внесенной группы выбранному контроллеру
-        public void AddGroupToController()
+        public void AddGroupToController(Controller controller)
         {
-            if (all_ctrl_cb.SelectedItem == null)
+            if (controller == null)
             {
                 MessageBox.Show("Сначала выберите контроллер!");
                 return;
             }
 
-            Controller controller_for_group = controllers.Find(x => x.ControllerName == all_ctrl_cb.SelectedItem.ToString());
+
             PropertyGroup addable_group = GetrGroupWithValues();
 
-            if (controller_for_group.PropertyGroups.Contains(addable_group, new PropertyGroupsComparer()))
+            if (controller.PropertyGroups.Contains(addable_group, new PropertyGroupsComparer()))
             {
-                controller_for_group.PropertyGroups.Remove(controller_for_group.PropertyGroups.Find(x => x.PropetyGroupName == addable_group.PropetyGroupName));
-                controller_for_group.PropertyGroups.Add(addable_group);
+                controller.PropertyGroups.Remove(controller.PropertyGroups.Find(x => x.PropetyGroupName == addable_group.PropetyGroupName));
+                controller.PropertyGroups.Add(addable_group);
             }
-            else controller_for_group.AddPropertyGroup(addable_group);
+            else controller.AddPropertyGroup(addable_group);
 
         }
 
@@ -154,19 +155,19 @@ namespace Estimator_v2._1
             for (int i = 0; i < evaluation_grid.RowCount; i++)
             {
                 List<int> assesments = new List<int>();
-                for (int j = 1; j < evaluation_grid.ColumnCount; j++)
+                for (int j = 0; j < evaluation_grid.ColumnCount - 1; j++)
                 {
                     assesments.Add(int.Parse(evaluation_grid[j, i].Value.ToString()));
                 }
                 if (propertyGroups
                     .Find(x => x.PropetyGroupName == new_group.PropetyGroupName)
                     .Properties
-                    .Find(t => t.Name == evaluation_grid.Rows[i].HeaderCell.Value.ToString())
+                    .Find(t => t.Name == evaluation_grid.Rows[i].HeaderCell.Value.ToString().Replace("*",""))
                     .Reversed)
                 {
-                    p = new Property(evaluation_grid.Rows[i].HeaderCell.Value.ToString(), double.Parse(evaluation_grid[0, i].Value.ToString()), assesments, true);
+                    p = new Property(evaluation_grid.Rows[i].HeaderCell.Value.ToString(), double.Parse(evaluation_grid[evaluation_grid.ColumnCount - 1, i].Value.ToString()), assesments, true);
                 }
-                else p = new Property(evaluation_grid.Rows[i].HeaderCell.Value.ToString(), double.Parse(evaluation_grid[0, i].Value.ToString()), assesments, false);
+                else p = new Property(evaluation_grid.Rows[i].HeaderCell.Value.ToString().Replace("*", ""), double.Parse(evaluation_grid[evaluation_grid.ColumnCount - 1, i].Value.ToString()), assesments, false);
                 new_group.AddProperty(p);
             }
             return new_group;
@@ -218,7 +219,7 @@ namespace Estimator_v2._1
 
             for (int i = 0; i < evaluation_grid.RowCount; i++)
             {
-                for (int j = 1; j < evaluation_grid.ColumnCount; j++)
+                for (int j = 0; j < evaluation_grid.ColumnCount - 1; j++)
                 {
                     if (evaluation_grid[j, i].Value == null || !StringIsDigits(evaluation_grid[j, i].Value.ToString()) || int.Parse(evaluation_grid[j, i].Value.ToString()) > 10)
                     {
@@ -226,14 +227,23 @@ namespace Estimator_v2._1
                         return true;
                     }
                 }
-                if (evaluation_grid[0, i].Value == null || !IsDouble(evaluation_grid[0, i].Value.ToString()))
+                if (evaluation_grid[evaluation_grid.ColumnCount - 1, i].Value == null || !IsDouble(evaluation_grid[0, i].Value.ToString()))
                 {
-                    evaluation_grid[0, i].Style.ForeColor = Color.Red;
+                    evaluation_grid[evaluation_grid.ColumnCount - 1, i].Style.ForeColor = Color.Red;
                     return true;
                 }
             }
             return false;
         }
+
+        private void Delete_Pressed(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                evaluation_grid.SelectedCells[0].Value = "";
+            }
+        }
+
 
     }
 }

@@ -99,7 +99,5 @@ namespace ComputerModellingLib
             propertyesAverageExpertAssessmentsSum = 0;
 
         }
-
-        
     }
 }
